@@ -25,8 +25,8 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
-            any::stringr
             any::readr
+            any::stringr
             any::purrr
             any::tibble
             any::dplyr
