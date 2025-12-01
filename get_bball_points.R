@@ -1,5 +1,11 @@
 #get_bball_points.R
 
+library(readr)
+library(purrr)
+library(tibble)
+library(dplyr)
+library(stringr)
+
 src <- "https://kenpom.com/cbbga26.txt"
 lines <- read_lines(src)
 
@@ -52,4 +58,3 @@ if (file.exists(path)) {
 }
 
 write_csv(out, path)
-
