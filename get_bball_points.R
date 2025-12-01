@@ -1,4 +1,4 @@
-#get_bball_points.R
+# get_bball_points.R
 
 library(readr)
 library(purrr)
@@ -6,9 +6,11 @@ library(tibble)
 library(dplyr)
 library(stringr)
 
+# URL for KenPom data
 src <- "https://kenpom.com/cbbga26.txt"
 lines <- read_lines(src)
 
+# Function to extract rows
 extract_row <- function(x) {
   if (str_length(str_trim(x)) < 25) return(NULL)
   d <- str_sub(x, 1, 10)
@@ -22,9 +24,11 @@ extract_row <- function(x) {
   )
 }
 
+# Process all lines
 games <- map_df(lines, extract_row) %>%
   filter(!is.na(away_points), !is.na(home_points))
 
+# Summarise by date
 daily <- games %>%
   group_by(date) %>%
   summarise(
@@ -41,8 +45,15 @@ daily <- games %>%
     avg_points_per_game = as.numeric(avg_points_per_game)
   )
 
+# Ensure data folder exists
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+
+# Path to CSV
 path <- file.path("data", "kenpom_daily_summary.csv")
 
+# Update or create CSV
 if (file.exists(path)) {
   old <- read_csv(path, show_col_types = FALSE) %>%
     mutate(
@@ -57,4 +68,5 @@ if (file.exists(path)) {
   out <- daily
 }
 
+# Write CSV
 write_csv(out, path)
